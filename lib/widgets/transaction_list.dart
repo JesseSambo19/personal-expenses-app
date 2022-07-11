@@ -1,18 +1,23 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import '../models/transaction.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTx;
 
-  TransactionList(
-      this.transactions); // constructor which takes the list of transactions
+  TransactionList(this.transactions,
+      this.deleteTx); // constructor which takes the list of transactions
 
   @override
   Widget build(BuildContext context) {
     return Container(
       // for specifying the exact height of the ListView
-      height: MediaQuery.of(context).size.height / 2, // 300
+      height: MediaQuery.of(context).size.height /
+          1.5, // MediaQuery.of(context).size.height / 2
+      // almost remaining whole page = 300 remaining whole page = 450
       child: transactions.isEmpty
           ? Column(
               children: [
@@ -36,47 +41,36 @@ class TransactionList extends StatelessWidget {
               // this will return the list of transactions
               itemBuilder: (ctx, index) {
                 return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context)
-                                .primaryColor, // use the color of the global theme of the app
-                            width: 2,
-                          ),
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          "N\$${transactions[index].amount.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Theme.of(context)
-                                .primaryColor, // use the color of the global theme of the app
-                          ),
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: FittedBox(
+                          child: Text("N\$${transactions[index].amount}"),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transactions[index].title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1, // custom textTheme
-                          ),
-                          Text(
-                            DateFormat.yMMMd().format(transactions[index].date),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                      onPressed: () => deleteTx(transactions[index]
+                          .id), // wrap this in an anonymous function so that we pass a reference to this function, to this anonymous function
+                      // and then when this anonymous function is executed in there, we have our own function
+                      // we call now pass our argument
+                    ),
                   ),
                 );
               },

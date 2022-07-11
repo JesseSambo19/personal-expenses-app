@@ -18,15 +18,18 @@ class MyApp extends StatelessWidget {
         // global color theme for the app theme
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
+        // errorColor: Colors.red,
         fontFamily: "Quicksand",
         textTheme: ThemeData.light().textTheme.copyWith(
-              // custom textTheme it will only affect the titles for the expenses
-              subtitle1: TextStyle(
-                fontFamily: "OpenSans",
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            // custom textTheme it will only affect the titles for the expenses
+            subtitle1: TextStyle(
+              fontFamily: "OpenSans",
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
+            button: TextStyle(
+              color: Colors.white,
+            )),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
                 // custom textTheme it will only affect the title in the appBar
@@ -75,11 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 // function for adding new transactions
-  void _addNewTransaction(String txtitle, double txamount) {
+  void _addNewTransaction(
+      String txtitle, double txamount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txtitle,
       amount: txamount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
 
@@ -103,6 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(_recentTransactions),
-            TransactionList(
-                _userTransactions), // returns both the textfields and list of transactions
+            TransactionList(_userTransactions,
+                _deleteTransaction), // returns both the textfields and list of transactions
           ],
         ),
       ),
