@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import './chart_bar.dart';
+import 'package:intl/intl.dart';
 
+import './chart_bar.dart';
 import '../models/transaction.dart';
 
-import 'package:intl/intl.dart';
+
 
 class Chart extends StatelessWidget {
   // const Chart({ Key? key }) : super(key: key);
